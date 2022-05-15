@@ -7,6 +7,4 @@ def lit_fichier(nom_fichier: str)-> dict:
     dic_rep = list(csv.DictReader(fichier_ouvert, delimiter=","))
     return dic_rep
 
-print(lit_fichier("equipes_professeurs"))
-
-    
+print(lit_fichier("classes"))
