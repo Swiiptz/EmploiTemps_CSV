@@ -35,5 +35,5 @@ def lit_fichier_equipes_professeurs()->dict:
 row = lit_fichier_equipes_professeurs()
 print(row)
 #for i in row:
-  #print(i,row[i])
+  #print(i,row[i]
 
