@@ -1,6 +1,4 @@
 import csv
-from msilib import sequence
-import profile
 #---------------Fonctions outils--------------------#
 def exporter(tableau:list, nom_fichier:str):#->csv
   """
@@ -87,7 +85,7 @@ def cree_edt():
   for i in range(len(classe_mat_all)):
     prof = tab_equipes_professeurs[classe_mat_all[i]]["N_Professeur"]
     prof_all.append(prof)
-  print(prof_all)
+  #print(prof_all)
   for i in dic_rep.keys():
     if compteur > 371:
       break
@@ -98,9 +96,9 @@ def cree_edt():
     integer_index = int(index_dic_rep)
     if len(str(integer_index)) == 1:
       index_dic_rep = index_dic_rep[1:]
-    print()
+    #print(dic_rep[i]["Nom_Professeur"])
     dic_rep[i]["Nom_Professeur"]=tab_professeurs[index_dic_rep]["Nom_Professeur"]
-    print(dic_rep[i]["Nom_Professeur"])
+  print(dic_rep)
   return dic_rep
 
 
