@@ -1,4 +1,6 @@
 import csv
+from msilib import sequence
+import profile
 #---------------Fonctions outils--------------------#
 def exporter(tableau:list, nom_fichier:str):#->csv
   """
@@ -12,9 +14,9 @@ def exporter(tableau:list, nom_fichier:str):#->csv
   writer = csv.writer(fichier)
   writer.writerows(tableau)
 
-def change_index(dico:dict, long:tuple, nom_index:str)->dict:
+def change_index(dico:dict, long:tuple, nom_index:str, ajout:str)->dict:
   for i in range(1,len(dico)+1):
-   new_key = dico[str(i)][str(nom_index)][long[0]:long[1]]
+   new_key = ajout+dico[str(i)][str(nom_index)][long[0]:long[1]]
    #print(type(new_key))
    dico[new_key]=dico.pop(str(i))
   return dico
@@ -48,7 +50,6 @@ def lit_fichier_equipes_professeurs()->dict:
   """
   #déclaration des variables utilisées
   dic_rep = {}
-  dic_prof = {}
   #on ouvre la table equipes_professeurs
   with open("equipes_professeurs.csv", "r", encoding = "utf-8") as fichier_ouvert:
     tab_rep = list(csv.reader(fichier_ouvert, delimiter=","))
@@ -60,13 +61,39 @@ def lit_fichier_equipes_professeurs()->dict:
   exporter(tab_rep, "csv_temp.csv")
   dic_rep = lit_fichier("csv_temp")
   #on change les indexs avec la classe et la matière avec la méthode pop
-  dic_indexe = change_index(dic_rep,(0,4),"N_equipe_prof")
+  dic_indexe = change_index(dic_rep,(0,4),"N_equipe_prof","")
   return dic_indexe
   
 
 
 def cree_edt():
-  pass
+  classe_mat_all = []
+  prof_all = []
+  compteur = 0
+  dic_rep = lit_fichier("sequences")
+  change_index(dic_rep,(0,None),"N_Sequence", "0")
+  for i in dic_rep.keys():
+   matiere = dic_rep[i]["N_Matiere"]
+   classe = dic_rep[i]["N_Classe"]
+   long_matiere = len(matiere)
+   long_classe=len(classe)
+   if long_matiere ==1 :
+    matiere = "0"+str(matiere)
+   if long_classe==1:
+    classe = "0"+str(classe)
+   classe_mat = str(classe)+str(matiere)
+   classe_mat_all.append(classe_mat)
+  
+  for i in range(len(classe_mat_all)):
+    prof = tab_equipes_professeurs[classe_mat_all[i]]["N_Professeur"]
+    prof_all.append(prof)
+  print(prof_all)
+  for i in dic_rep.keys():
+    if compteur > 371:
+      break
+    dic_rep[i]["N_Professeur"]=prof_all[compteur]
+    compteur+=1
+  return dic_rep
 
 
 #------------Déclaration variables globales-------------#
@@ -82,11 +109,11 @@ tab_equipes_professeurs = lit_fichier_equipes_professeurs()
 
 #--------------------------Test-----------------------------#
 row = tab_equipes_professeurs
-#row = change_index(tab_equipes_professeurs,(0,4),"N_equipe_prof")
+cree_edt()
+#print(len(cree_edt()))
+#for i in row:
+#  print(i,row[i])
 
-for i in row:
-  print(i,row[i])
-#print(row)
 
 #-----------------------------------------------------------#
 
