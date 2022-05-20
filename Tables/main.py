@@ -4,7 +4,7 @@ import profile
 #---------------Fonctions outils--------------------#
 def exporter(tableau:list, nom_fichier:str):#->csv
   """
-  entrée
+  entree
           tableau        list       table à convertir en csv
           nom_fichier    str        nom du fichier csv 
   sortie
@@ -24,12 +24,12 @@ def change_index(dico:dict, long:tuple, nom_index:str, ajout:str)->dict:
 
 def lit_fichier(nom_fichier: str)-> dict:
   """
-  entrée
+  entree
           nom_fichier     str     le nom du fichier csv à transformer en dictionnaire
   sortie
           dic_rep         dict    dictionnaire du fichier csv avec les bons indexs 
   """
-  #déclaration des variables utilisées
+  #declaration des variables utilisees
   tab_rep = []
   dic_rep = {}
   #on charge le fichier et on le transforme en liste
@@ -43,24 +43,24 @@ def lit_fichier(nom_fichier: str)-> dict:
 
 def lit_fichier_equipes_professeurs()->dict:
   """
-  entrée
+  entree
           rien
   sortie
           dic_rep       dict        dictionnaire de la tableau equipes_professeurs.csv
   """
-  #déclaration des variables utilisées
+  #declaration des variables utilisees
   dic_rep = {}
   #on ouvre la table equipes_professeurs
   with open("equipes_professeurs.csv", "r", encoding = "utf-8") as fichier_ouvert:
     tab_rep = list(csv.reader(fichier_ouvert, delimiter=","))
     tab_rep[0]= ["N_equipe_prof","N_Classe", "N_Matiere", "N_Professeur"]
-  #on ordonne dans une liste avec des virgules les différents indexs
+  #on ordonne dans une liste avec des virgules les differents indexs
     for i in range(1,len(tab_rep)):
       tab_rep[i]= [tab_rep[i][0],tab_rep[i][0][0:2],tab_rep[i][0][2:4],tab_rep[i][0][4:6]]
-  #on exporte la table réordonnée pour la transformer en dictionnaire  
+  #on exporte la table reordonnee pour la transformer en dictionnaire  
   exporter(tab_rep, "csv_temp.csv")
   dic_rep = lit_fichier("csv_temp")
-  #on change les indexs avec la classe et la matière avec la méthode pop
+  #on change les indexs avec la classe et la matière avec la methode pop
   dic_indexe = change_index(dic_rep,(0,4),"N_equipe_prof","")
   return dic_indexe
   
@@ -93,10 +93,18 @@ def cree_edt():
       break
     dic_rep[i]["N_Professeur"]=prof_all[compteur]
     compteur+=1
+  for i in dic_rep.keys():
+    index_dic_rep = dic_rep[i]["N_Professeur"]
+    integer_index = int(index_dic_rep)
+    if len(str(integer_index)) == 1:
+      index_dic_rep = index_dic_rep[1:]
+    print()
+    dic_rep[i]["Nom_Professeur"]=tab_professeurs[index_dic_rep]["Nom_Professeur"]
+    print(dic_rep[i]["Nom_Professeur"])
   return dic_rep
 
 
-#------------Déclaration variables globales-------------#
+#------------Declaration variables globales-------------#
 tab_classes = lit_fichier("classes")
 tab_professeurs = lit_fichier("professeurs")
 tab_matieres = lit_fichier("matieres")
