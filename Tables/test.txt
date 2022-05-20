@@ -11,7 +11,12 @@ tab_classes :
 10 {'N_Classe': '10', 'Nom_Classe': '2°10'}
 11 {'N_Classe': '11', 'Nom_Classe': '2°11'}
 {'1': {'N_Classe': '1', 'Nom_Classe': '2°1'}, '2': {'N_Classe': '2', 'Nom_Classe': '2°2'}, '3': {'N_Classe': '3', 'Nom_Classe': '2°3'}, '4': {'N_Classe': '4', 'Nom_Classe': '2°4'}, '5': {'N_Classe': '5', 'Nom_Classe': '2°5'}, '6': {'N_Classe': '6', 'Nom_Classe': '2°6'}, '7': {'N_Classe': '7', 'Nom_Classe': '2°7'}, '8': {'N_Classe': '8', 'Nom_Classe': '2°8'}, '9': {'N_Classe': '9', 'Nom_Classe': '2°9'}, '10': {'N_Classe': '10', 'Nom_Classe': '2°10'}, '11': {'N_Classe': '11', 'Nom_Classe': '2°11'}}
-
+def change_index(dico:dict, long:tuple, nom_index:str, ajout:str)->dict:
+  for i in range(1,len(dico)+1):
+   new_key = ajout+dico[str(i)][str(nom_index)][long[0]:long[1]]
+   #print(type(new_key))
+   dico[new_key]=dico.pop(str(i))
+  return dico
 tab_professeurs:
 1 {'N_Professeur': '1', ' Nom_Professeur': ' ABECASSIS Audrey ', ' N_Matiere': ' 1'}
 2 {'N_Professeur': '2', ' Nom_Professeur': ' AUPHANT Nathalie ', ' N_Matiere': ' 2'}
