@@ -13,15 +13,6 @@ def exporter(tableau:list, nom_fichier:str):#->csv
   writer.writerows(tableau)
 
 def change_index(dico:dict, long:tuple, nom_index:str, ajout:str)->dict:
-  """
-  entree  
-          dico       dict     dictionnaire principale
-          long       tuple    longeur de l'id
-          nom_index  str      nom de l'index a changer
-          ajout      str      ajout d'un caractere a l'index (optionnel)
-  sortie
-          dico       dict     dictionnaire avec l'index change
-  """
   for i in range(1,len(dico)+1):
    new_key = ajout+dico[str(i)][str(nom_index)][long[0]:long[1]]
    #print(type(new_key))
@@ -90,42 +81,40 @@ def cree_edt():
   sortie
           dic_rep     dict        dictionnaire des sequences avec les différents indexs  
   """
-  #declaration des variables
   tab_equipes_professeurs = lit_fichier_equipes_professeurs()
   classe_mat_all = []
-  prof_all = []
+  prof_all = {}
   compteur = 0
   dic_rep = lit_fichier("sequences")
   change_index(dic_rep,(0,None),"N_Sequence", "0")
-  #initialisation des indexs pour l'ajout de professeurs a la table sequences
   for i in dic_rep.keys():
    matiere = dic_rep[i]["N_Matiere"]
    classe = dic_rep[i]["N_Classe"]
    long_matiere = len(matiere)
    long_classe=len(classe)
-   #verification de la longueur des indexs
    if long_matiere ==1 :
     matiere = "0"+str(matiere)
    if long_classe==1:
     classe = "0"+str(classe)
    classe_mat = str(classe)+str(matiere)
-   #creation d'une liste contenant tous les indexs
    classe_mat_all.append(classe_mat)
-  #initialisation d'une liste permettant de recuperer les indexs des professeurs dans la table equipes professeurs
-  for i in range(len(classe_mat_all)):
-    prof = tab_equipes_professeurs[classe_mat_all[i]]["N_Professeur"]
-    prof_all.append(prof)
-  #association des numeros des professeurs a la table sequences
+  for i in classe_mat_all:
+    prof = tab_equipes_professeurs[i]["N_Professeur"]
+    prof_all[i]=prof
+  print(prof_all)
+  for i in prof_all:
+    dic_rep[i]["N_Professeur"]=prof_all[i]
+    #compteur+=1
+  print(dic_rep)  
   for i in dic_rep.keys():
-    if compteur > 371:
-      break
-    dic_rep[i]["N_Professeur"]=prof_all[compteur]
-    compteur+=1
-  #ajout des differentes variables a la table sequences
+    index_dic_rep = dic_rep[i]["N_Professeur"]
+    integer_index = int(index_dic_rep)
+    if len(str(integer_index)) == 1:
+      index_dic_rep = index_dic_rep[1:]
+    dic_rep[i]["Nom_Professeur"]=tab_professeurs[index_dic_rep]["Nom_Professeur"]
   ajout_dic(dic_rep,tab_professeurs,"N_Professeur","Nom_Professeur",1,(1,None))
   ajout_dic(dic_rep,tab_jours,"N_Jour","Nom_jour",100,(0,None))
   ajout_dic(dic_rep,tab_classes,"N_Classe","Nom_Classe",100,(0,None))
-  print(dic_rep)
   return dic_rep
 
 
@@ -142,7 +131,7 @@ tab_equipes_professeurs = lit_fichier_equipes_professeurs()
 
 #--------------------------Test-----------------------------#
 row = tab_equipes_professeurs
-#print(cree_edt())
+cree_edt()
 #print(len(cree_edt()))
 #for i in row:
 #  print(i,row[i])
