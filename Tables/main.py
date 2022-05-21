@@ -37,6 +37,16 @@ def ajout_dic(dico:dict, dico_ann:dict, num_var:str, nom_var:str, taille, longeu
     #print(index_dic_rep, nom_var, num_var, i, dico_ann)
     dico[i][nom_var]=dico_ann[index_dic_rep][nom_var]
   return dico
+
+def choix_non_reconnu(var: str,table):
+  global choix_non
+  if var not in table:
+    choix_non = 1
+    print("Choix non reconnu, fin du programme")
+  else :
+    return None
+
+
 #-----------------------------------------------------#
 
 def lit_fichier(nom_fichier: str)-> dict:
@@ -125,8 +135,66 @@ def cree_edt():
   ajout_dic(dic_rep,tab_professeurs,"N_Professeur","Nom_Professeur",1,(1,None))
   ajout_dic(dic_rep,tab_jours,"N_Jour","Nom_jour",100,(0,None))
   ajout_dic(dic_rep,tab_classes,"N_Classe","Nom_Classe",100,(0,None))
-  print(dic_rep)
   return dic_rep
+
+def Etat_Acceuil()->int:
+ global stop
+ choix = input("Bonjour. Que voulez-vous faire ?\n0 : Sortir\n1 : Afficher l'emploi du temps d'une classe\n2 : Afficher l'emploi du temps d'un professeur\n3 : Afficher la presence ou non des classes a une heure donnee\n\nEntrez votre choix, puis validez :")
+ if choix == "0":
+  print("Fin du programme")
+  stop = 1
+ elif choix == "1":
+  Etat_choix_classe()
+ elif choix == "2":
+  Etat_choix_enseignant()
+ elif choix == "3":
+  Etat_choix_jour_hhmm()
+ else:
+  choix_non_reconnu()
+
+def Etat_choix_classe()->int:
+  global choix_classe
+  print("Entrez le numero de la classe dont vous voulez voir l'emploi du temps\n0 : Retour a l'acceuil")
+  for i in tab_classes:
+    print(i, ":",tab_classes[i]["Nom_Classe"])
+  choix_classe = input('Votre Choix :')
+  #if choix_classe not in tab_classes:
+  choix_non_reconnu(choix_classe,tab_classes)
+  if choix_classe=="0":
+    Etat_Acceuil()
+
+def Etat_choix_enseignant()->int:
+  global choix_professeur 
+  print("Entrez le numero de l'enseignant dont vous voulez voir l'emploi du temps\n0 : Retour a l'acceuil")
+  for i in tab_professeurs:
+    print(i, ":", tab_professeurs[i]["Nom_Professeur"])
+  choix_professeur = input('Votre Choix :')
+  if choix_professeur=='0':
+    Etat_Acceuil()
+  #if choix_professeur not in tab_professeurs:
+  choix_non_reconnu(choix_professeur,tab_professeurs)
+  
+  
+
+def Etat_choix_jour_hhmm()->int:
+  global choix_jour
+  global choix_hhmm
+  test_hhmm = []
+  for i in tab_sequences:
+    hhmm = tab_sequences[i]["heure_debut"]
+    test_hhmm.append(hhmm)
+  print("Entrez le jour auquel vous souhaitez avoir l'etat des classes")
+  for i in tab_jours:
+    print(i,":",tab_jours[i]["Nom_jour"])
+  choix_jour = input("Votrez choix :")
+  if choix_jour == "0":
+    Etat_Acceuil()
+  if choix_jour not in tab_jours:
+    print("choix_non_reconnu")
+  choix_hhmm = input("Entrez l'heure (hh:mm, tranche de 30min de 8:30 a 18:00) a laquelle vous souhaitez avoir l'etat des classes :")
+  #if choix_hhmm not in test_hhmm:
+  choix_non_reconnu(choix_hhmm,test_hhmm)
+  
 
 
 #------------Declaration variables globales-------------#
@@ -140,8 +208,11 @@ tab_equipes_professeurs = lit_fichier_equipes_professeurs()
 
 
 
+
 #--------------------------Test-----------------------------#
 row = tab_equipes_professeurs
+Etat_Acceuil()
+#Etat_choix_classe()
 #print(cree_edt())
 #print(len(cree_edt()))
 #for i in row:
