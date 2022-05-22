@@ -323,19 +323,35 @@ def edit_edp_professeurs(nprofesseur:int)->None: #Fonction par Baptiste
   sortie
           rien          rien    affiche emploi du temps du professeur demande
   """
-  if len(nprofesseur)==1:
-    zero_nprofesseur = "0"+nprofesseur
+  #declarations variables
   tab_prof_jour = {}
+  tab_prof_jour_sort = {}
+  zero_nprofesseur = nprofesseur
+  #on verifie la taille de l'index du prof pour faire gaffe 
+  if len(nprofesseur)==1:
+      zero_nprofesseur = "0"+nprofesseur
+  #permet de récupérer les jours pour chaque prof
   for i in tab_sequences:
     if tab_sequences[i]["N_Professeur"]==zero_nprofesseur:
       p_jour = tab_sequences[i]["N_Jour"]
       tab_prof_jour[p_jour]=p_jour
-  for k in tab_prof_jour:
+  #tri les jours dans l'ordre chronologique
+  n_sort = sorted(tab_prof_jour)
+  for i in n_sort:
+    tab_prof_jour_sort[i]=i
+  #boucle qui parcourt les jours
+  for k in tab_prof_jour_sort:
     nom_jour = tab_jours[k]["Nom_jour"]
     print(nom_jour)
-    n_jour = tab_prof_jour[k]
+    n_jour = tab_prof_jour_sort[k]
+    #parcourt tab_sequences
     for i in tab_sequences:
-      if tab_sequences[i]["N_Professeur"]==tab_professeurs[nprofesseur]["N_Professeur"] and tab_sequences[i]["N_Jour"]==n_jour:
+      n_prof = tab_professeurs[nprofesseur]["N_Professeur"]
+      #verifie taille indexs
+      if len(n_prof)==1:
+        n_prof = "0"+n_prof
+      #verifie l'index du professeur et le jour
+      if tab_sequences[i]["N_Professeur"]==n_prof and tab_sequences[i]["N_Jour"]==n_jour :
         heure_debut = tab_sequences[i]["heure_debut"]
         duree = tab_sequences[i]["duree"]
         heure_suiv = ajout_heure(heure_debut,duree)
@@ -382,7 +398,9 @@ tab_equipes_professeurs = lit_fichier_equipes_professeurs()
 
 #--------------------------Main-----------------------------#
 def main():
-  print(tab_sequences)
+  #print(tab_sequences)
+  for i in tab_sequences:
+    print(i, tab_sequences[i])
   while True:
     Etat_Acceuil()
 
