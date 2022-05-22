@@ -1,4 +1,4 @@
-#importation des bibliothèques
+#importation des bibliotheques
 import csv
 #---------------Fonctions outils--------------------#
 def exporter(tableau:list, nom_fichier:str):#->csv #Fonction par Milan
@@ -84,7 +84,7 @@ def ajout_heure(heure_debut:str,duree:str)->str: #Fonction par Milan
   mm = heure_debut[3:]
   duree_hh = duree[0:2]
   duree_mm = duree[3:]
-  #on additionne les différentes partie des deux chaines
+  #on additionne les differentes partie des deux chaines
   heure_suiv_hh = int(hh)+int(duree_hh)
   heure_suiv_mm = int(mm)+int(duree_mm)
   heure_suiv = str(heure_suiv_hh)+":"+str(heure_suiv_mm)
@@ -94,7 +94,7 @@ def ajout_heure(heure_debut:str,duree:str)->str: #Fonction par Milan
   if int(heure_suiv_mm) == 0 :
     heure_suiv = int(hh)+int(duree_hh)
     heure_suiv = str(heure_suiv)+":00"
-  #passage de la base 10 à base 60 (60 min = heure)
+  #passage de la base 10 a base 60 (60 min = heure)
   if heure_suiv_mm == "60":
     heure_suiv_hh = int(heure_suiv_hh)+1
     heure_suiv = str(heure_suiv_hh)+":00"
@@ -200,8 +200,8 @@ def Etat_Acceuil()->str: #Fonction par Milan
  #choix 0 fin du programme
  if choix == "0":
   print("Fin du programme")
-  stop = 1
- #renvoie sur les différentes fonctions selon les choix
+  exit()
+ #renvoie sur les differentes fonctions selon les choix
  elif choix == "1":
   Etat_choix_classe()
  elif choix == "2":
@@ -245,15 +245,16 @@ def Etat_choix_enseignant()->int: #Fonction par Baptiste
   for k in tab_professeurs.keys():
       b = str(tab_professeurs[k]['N_Matiere'])
       print(tab_professeurs[k]['N_Professeur'],":",tab_professeurs[k]['Nom_Professeur'],"("+tab_matieres[b]['Nom_Matiere']+")")
-  x = int(input('Votre choix:'))
-  x_str = str(x)
+  x = input('Votre choix:')
+  choix_str = str(x)
+  long_x = int(x)
   #renvoie a l'acceuil
-  if x==0:
-      Etat_Acceuil()
+  if x=='0':
+    Etat_Acceuil()
   #verification de l'entree de l'utilisateur
-  if x>len(tab_professeurs):
+  elif long_x>len(tab_professeurs):
       choix_non_reconnu(x,tab_professeurs)
-  #edit_edp_professeurs(x)
+  edit_edp_professeurs(choix_str)
 
 def Etat_choix_jour_hhmm()->int:  #Fonction par Baptiste
   """
@@ -315,13 +316,40 @@ def edit_edp_classe(nclasse:str)->None: #Fonction par Benjamin
         nom_matiere = tab_sequences[i]["Nom_Matiere"]
         print("\t",heure_debut+"-"+heure_suiv,"("+duree+")",":",nom_matiere,"/",nom_professeur)
  
+def edit_edp_professeurs(nprofesseur:int)->None: #Fonction par Baptiste
+  """
+  entree
+         nprofesseur    int     index du professeur
+  sortie
+          rien          rien    affiche emploi du temps du professeur demande
+  """
+  if len(nprofesseur)==1:
+    zero_nprofesseur = "0"+nprofesseur
+  tab_prof_jour = {}
+  for i in tab_sequences:
+    if tab_sequences[i]["N_Professeur"]==zero_nprofesseur:
+      p_jour = tab_sequences[i]["N_Jour"]
+      tab_prof_jour[p_jour]=p_jour
+  for k in tab_prof_jour:
+    nom_jour = tab_jours[k]["Nom_jour"]
+    print(nom_jour)
+    n_jour = tab_prof_jour[k]
+    for i in tab_sequences:
+      if tab_sequences[i]["N_Professeur"]==tab_professeurs[nprofesseur]["N_Professeur"] and tab_sequences[i]["N_Jour"]==n_jour:
+        heure_debut = tab_sequences[i]["heure_debut"]
+        duree = tab_sequences[i]["duree"]
+        heure_suiv = ajout_heure(heure_debut,duree)
+        nom_professeur = tab_sequences[i]["Nom_Professeur"]
+        nom_matiere = tab_sequences[i]["Nom_Matiere"]
+        print("\t",heure_debut+"-"+heure_suiv,"("+duree+")",":",nom_matiere,"/",nom_professeur)
+
 def edit_etat_classe(njour:str,hhmm:str)->None: #Fonction par Milan
   """
   entree
           njour     str    index du jour   
           hhmm      str    heure de debut
   sortie
-          rien      rien   affiche pour un jour les cours à partir de l'heure demandee
+          rien      rien   affiche pour un jour les cours a partir de l'heure demandee
   """
   hhmm_in = hhmm
   dico_order = {}
@@ -354,6 +382,7 @@ tab_equipes_professeurs = lit_fichier_equipes_professeurs()
 
 #--------------------------Main-----------------------------#
 def main():
+  print(tab_sequences)
   while True:
     Etat_Acceuil()
 
