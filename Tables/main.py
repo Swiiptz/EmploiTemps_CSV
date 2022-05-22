@@ -46,7 +46,26 @@ def choix_non_reconnu(var: str,table):
   else :
     return None
 
-
+def ajout_heure(heure_debut,duree,):
+  hh = heure_debut[0:2]
+  mm = heure_debut[3:]
+  duree_hh = duree[0:2]
+  duree_mm = duree[3:]
+  heure_suiv_hh = int(hh)+int(duree_hh)
+  heure_suiv_mm = int(mm)+int(duree_mm)
+  heure_suiv = str(heure_suiv_hh)+":"+str(heure_suiv_mm)
+  heure_suiv_mm = heure_suiv[3:]
+  heure_suiv_hh = heure_suiv[0:2]
+  if int(heure_suiv_mm) == 0 :
+    heure_suiv = int(hh)+int(duree_hh)
+    heure_suiv = str(heure_suiv)+":00"
+  if heure_suiv_mm == "60":
+    heure_suiv_hh = int(heure_suiv_hh)+1
+    heure_suiv = str(heure_suiv_hh)+":00"
+  return heure_suiv
+#print(ajout_heure("10:30","02:00"))
+#print(ajout_heure("10:30","01:00"))
+#print(ajout_heure("10:30","01:30"))
 #-----------------------------------------------------#
 
 def lit_fichier(nom_fichier: str)-> dict:
@@ -135,6 +154,7 @@ def cree_edt():
   ajout_dic(dic_rep,tab_professeurs,"N_Professeur","Nom_Professeur",1,(1,None))
   ajout_dic(dic_rep,tab_jours,"N_Jour","Nom_jour",100,(0,None))
   ajout_dic(dic_rep,tab_classes,"N_Classe","Nom_Classe",100,(0,None))
+  ajout_dic(dic_rep,tab_matieres,"N_Matiere","Nom_Matiere",100,(0,None))
   return dic_rep
 
 def Etat_Acceuil()->int:
@@ -162,17 +182,21 @@ def Etat_choix_classe()->int:
   choix_non_reconnu(choix_classe,tab_classes)
   if choix_classe=="0":
     Etat_Acceuil()
+  edit_edp_classe(choix_classe)
 
 def Etat_choix_enseignant()->int:
-  global choix_professeur 
-  print("Entrez le numero de l'enseignant dont vous voulez voir l'emploi du temps\n0 : Retour a l'acceuil")
-  for i in tab_professeurs:
-    print(i, ":", tab_professeurs[i]["Nom_Professeur"])
-  choix_professeur = input('Votre Choix :')
-  if choix_professeur=='0':
-    Etat_Acceuil()
-  #if choix_professeur not in tab_professeurs:
-  choix_non_reconnu(choix_professeur,tab_professeurs)
+    print('Entrez le numero de l\'enseignant dont vous voulez voir l\'emploit du temps\nEntrez votre choix,puis validez:')  
+    print("0 : Retour a l'accueil")
+    for k in tab_professeurs.keys():
+        b = str(tab_professeurs[k]['N_Matiere'])
+        print(tab_professeurs[k]['N_Professeur'],":",tab_professeurs[k]['Nom_Professeur'],"("+tab_matieres[b]['Nom_Matiere']+")")
+    x = int(input('Votre choix:'))
+    if x==0:
+        Etat_Acceuil()
+    if x>len(tab_professeurs):
+        choix_non_reconnu(x,tab_professeurs)
+    else:
+        return('welldone')
   
   
 
@@ -189,11 +213,33 @@ def Etat_choix_jour_hhmm()->int:
   choix_jour = input("Votrez choix :")
   if choix_jour == "0":
     Etat_Acceuil()
-  if choix_jour not in tab_jours:
-    print("choix_non_reconnu")
+  choix_non_reconnu(choix_jour,tab_jours)
   choix_hhmm = input("Entrez l'heure (hh:mm, tranche de 30min de 8:30 a 18:00) a laquelle vous souhaitez avoir l'etat des classes :")
   #if choix_hhmm not in test_hhmm:
   choix_non_reconnu(choix_hhmm,test_hhmm)
+  print(choix_classe)
+  edit_edp_classe(choix_classe)
+
+
+def edit_edp_classe(nclasse:int)->None:
+  nom_classe = tab_classes[nclasse]["Nom_Classe"]
+  print("Emploi du temps de la",nom_classe)
+  compteur_a = 0
+  compteur_b = 0
+  for k in tab_jours:
+    nom_jour = tab_jours[k]["Nom_jour"]
+    print(nom_jour)
+    n_jour = tab_jours[k]["N_Jour"]
+    for i in tab_sequences:
+      if tab_sequences[i]["N_Classe"]==tab_classes[nclasse]["N_Classe"] and tab_sequences[i]["N_Jour"]==n_jour:
+        compteur_a+=1
+        heure_debut = tab_sequences[i]["heure_debut"]
+        duree = tab_sequences[i]["duree"]
+        heure_suiv = ajout_heure(heure_debut,duree)
+        nom_professeur = tab_sequences[i]["Nom_Professeur"]
+        nom_matiere = tab_sequences[i]["Nom_Matiere"]
+        print("\t",heure_debut+"-"+heure_suiv,"("+duree+")",":",nom_matiere,"/",nom_professeur)
+
   
 
 
