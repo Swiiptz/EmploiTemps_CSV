@@ -198,7 +198,6 @@ def Etat_choix_enseignant()->int:
     else:
         return('welldone')
   
-  
 
 def Etat_choix_jour_hhmm()->int:
   global choix_jour
@@ -218,7 +217,7 @@ def Etat_choix_jour_hhmm()->int:
   #if choix_hhmm not in test_hhmm:
   choix_non_reconnu(choix_hhmm,test_hhmm)
   print(choix_classe)
-  edit_edp_classe(choix_classe)
+  edit_etat_classe(choix_jour, choix_hhmm)
 
 
 def edit_edp_classe(nclasse:int)->None:
@@ -241,6 +240,14 @@ def edit_edp_classe(nclasse:int)->None:
         print("\t",heure_debut+"-"+heure_suiv,"("+duree+")",":",nom_matiere,"/",nom_professeur)
 
   
+def edit_etat_classe(njour:str, hhmm:str)->None:
+  hhmm_in = hhmm
+  dico_order = {}
+  print("Liste des cours le {nom_jour} a {hhmm_in}".format(nom_jour = tab_jours[njour]["Nom_jour"],hhmm_in = hhmm))
+  for i in tab_sequences:
+    if tab_sequences[i]["N_Jour"]==njour and tab_sequences[i]["duree"]==hhmm:
+  return None
+
 
 
 #------------Declaration variables globales-------------#
@@ -251,9 +258,6 @@ tab_jours = lit_fichier("jours")
 tab_sequences = cree_edt()
 tab_equipes_professeurs = lit_fichier_equipes_professeurs()
 #-------------------------------------------------------#
-
-
-
 
 #--------------------------Test-----------------------------#
 row = tab_equipes_professeurs
