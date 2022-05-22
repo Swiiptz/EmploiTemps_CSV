@@ -330,7 +330,7 @@ def edit_edp_professeurs(nprofesseur:int)->None: #Fonction par Baptiste
   #on verifie la taille de l'index du prof pour faire gaffe 
   if len(nprofesseur)==1:
       zero_nprofesseur = "0"+nprofesseur
-  #permet de récupérer les jours pour chaque prof
+  #permet de recuperer les jours pour chaque prof
   for i in tab_sequences:
     if tab_sequences[i]["N_Professeur"]==zero_nprofesseur:
       p_jour = tab_sequences[i]["N_Jour"]
@@ -399,8 +399,6 @@ tab_equipes_professeurs = lit_fichier_equipes_professeurs()
 #--------------------------Main-----------------------------#
 def main():
   #print(tab_sequences)
-  for i in tab_sequences:
-    print(i, tab_sequences[i])
   while True:
     Etat_Acceuil()
 
