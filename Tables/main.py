@@ -196,7 +196,7 @@ def Etat_Acceuil()->str: #Fonction par Milan
         menu de l'acceuil
  """ 
  global stop
- choix = input("Bonjour. Que voulez-vous faire ?\n0 : Sortir\n1 : Afficher l'emploi du temps d'une classe\n2 : Afficher l'emploi du temps d'un professeur\n3 : Afficher la presence ou non des classes a une heure donnee\n\nEntrez votre choix, puis validez :")
+ choix = input("Bonjour. Que voulez-vous faire ?\n0 : Sortir\n1 : Afficher l'emplois du temps d'une classe\n2 : Afficher l'emploi du temps d'un professeur\n3 : Afficher la presence ou non des classes a une heure donnee\n\nEntrez votre choix, puis validez :")
  #choix 0 fin du programme
  if choix == "0":
   print("Fin du programme")
@@ -276,7 +276,7 @@ def Etat_choix_jour_hhmm()->int:  #Fonction par Baptiste
   #affichage des jours
   for i in tab_jours:
     print(i,":",tab_jours[i]["Nom_jour"])
-  choix_jour = input("Votrez choix :")
+  choix_jour = input("Votre choix :")
   #renvoie a l'acceuil
   if choix_jour == "0":
     Etat_Acceuil()
